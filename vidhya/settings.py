@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'userprofile',
+    'candidate',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -70,14 +73,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vidhya.wsgi.application'
 
+AUTH_USER_MODEL = 'userprofile.User'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', #'django.db.backends.postgresql_psycopg2',
+        'NAME': 'vidhyadb',
+        'USER': 'jaarwisadmin',
+        'PASSWORD': 'jaarwis',
+        'HOST': 'localhost',
+        'PORT':''
     }
 }
 
