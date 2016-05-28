@@ -4,10 +4,20 @@ from candidate.models import *
 
 
 class UploadData(object):
+    '''
+    This class receives a dict, and creates candidates with uploaded data.
+    It can be used directly or can be called in task.
+    '''
+    
     def __init__(self, data):
         self.data = data
     
     def create_candidates(self):
+        '''
+        Used as entry point for this class,
+        creates candidate and stores qualification/cities on that candidate
+        '''
+        
         for row in self.data:
             cdata = {}
             cdata['serial_no'] = row.get('serial_no', 0)
@@ -28,6 +38,9 @@ class UploadData(object):
             self.set_skills(candidate, row)
     
     def set_city_related_data(self, candidate, row):
+        '''
+        Maps city specific data to candidate
+        '''
         nearest_city = row.get('nearest_city')
         current_city = row.get('current_city', 'N/A')
         corrected_name = row.get('corrected_city_name', '')
@@ -57,6 +70,10 @@ class UploadData(object):
             
     
     def get_city(self, city_name, corrected_name=None):
+        '''
+        utility function to get city, looks for __iexact match of city,
+        in case of no match, create the city and return 
+        '''
         city_name = city_name.strip()
         
         if corrected_name:
@@ -78,6 +95,11 @@ class UploadData(object):
         return city
         
     def set_qualifications(self, candidate, row):
+        '''
+        Maps qualification to candidates,
+        basically storing UG/PG/Post PG data
+        '''
+        
         if row.get('UG_Course', False):
             ug = {}
             ug['course_type'] = 'UG_Course'
@@ -108,6 +130,9 @@ class UploadData(object):
             candidate.qualifications.add(qualification)
     
     def set_skills(self, candidate, row):
+        '''
+        Maps skills to candidates
+        '''
         skills = row.get('skills', '')
         if skills:
             skills = [each.strip() for each in row.get('skills').split(',')]
