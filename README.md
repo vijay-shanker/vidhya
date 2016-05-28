@@ -7,3 +7,6 @@
 only 4 records will be served in csv file.
 5. Admin can do CRUD on all tables
 6. Excel sheet can be uploaded from admin, where records get created in chunks of 100 pieces at a time.
+
+p.s There is spelling mistake in provided excel sheet header, changed it (from Trier1 to Tier1)
+
