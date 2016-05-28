@@ -77,6 +77,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader'
 )
 
+MAX_DOWNLOAD_LIMIT = 10
+
 WSGI_APPLICATION = 'vidhya.wsgi.application'
 
 AUTH_USER_MODEL = 'userprofile.User'

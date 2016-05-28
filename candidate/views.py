@@ -1,14 +1,14 @@
 import csv
-from django.shortcuts import render
+import datetime
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
-
+from django.conf import settings
 from .forms import SearchForm
-from .models import Candidate
+from .models import Candidate, DownloadLimits
 from core.utils import recruiter_check
 
 
@@ -42,6 +42,7 @@ class SearchCandidates(TemplateView):
         ctx = super(SearchCandidates, self).get_context_data(*args, **kwargs)
         ctx['form'] = self.form_class(self.request.GET)
         ctx['candidate_list'] = self.get_queryset()
+        ctx['balance'] = self.get_download_limit(self.request.user) 
         return ctx
     
     def get_queryset(self):
@@ -100,13 +101,33 @@ class SearchCandidates(TemplateView):
             queryset = Candidate.objects.all()
         else:
             queryset = self.apply_search(Candidate.objects.all())
-
+        queryset_count = queryset.count()
+        
+        #check for daily quota of downloads
+        balance = self.get_download_limit(request.user)
+        if balance > queryset_count:
+            # maintain a record of max download limit
+            self.update_download_limits(request.user, queryset_count)
+        else:
+            queryset = queryset[:balance]
+            self.update_download_limits(request.user, balance)
+            
         for c in queryset:
             writer.writerow([c.id, c.serial_no, c.name, c.mobile_no,
                 ', '.join([q.course_name for q in c.qualifications.all()]),
                 c.work_exp, c.analytics_exp, c.current_city.name,
                 c.ctc, c.current_designation, c.current_employer])
         return response
-         
-
+    
+    def update_download_limits(self, user, counter):
+        dlimits, created = DownloadLimits.objects.get_or_create(user=user, date=datetime.date.today()) 
+        dlimits.num_count += counter
+        dlimits.save()
+    
+    def get_download_limit(self, user):
+        dlimits, created =  DownloadLimits.objects.get_or_create(user=user, date=datetime.date.today())
+        if created:
+            return settings.MAX_DOWNLOAD_LIMIT
+        
+        return settings.MAX_DOWNLOAD_LIMIT - dlimits.num_count
 

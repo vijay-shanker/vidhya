@@ -11,18 +11,22 @@
 	
       </head>
       <body>
-        <div style="background:#C9F0DD none repeat scroll 0% 0%;width:100%;height:40px;margin-top:0px;">
+        <div style="background:#C9F0DD none repeat scroll 0% 0%;width:100%;height:30px;margin-top:0px;">
         	<p>Hey {{request.user.email}} &nbsp;&nbsp;<a href='/accounts/logout/'>Logout</a></p>
         </div>
             <div>
             	{% if candidate_list %}
+            	{% if balance > 0 %}
             	<form method="post" >
             		{% csrf_token %}
             	<button type="submit" class="btn btn-info" style="float:right;margin-right:30px;" id="download_csv_id">Download CSV</button>
             	</form>
+            	{% else %}
+            	<p style="color:red;">You have reached maximum no of downloads for today.</p>
+            	{% endif %}
             	{% endif %}
             	
-            <div style="width:30%;height:600px;background-color:#F5F5F5;overflow:hidden;margin-right:30px;">
+            <div style="width:30%;height:600px;background-color:#F5F5F5;overflow:hidden;margin-left:10px;">
 			            	
             	
             	<form method="GET" action="." role="form" id="search_form_id">
@@ -50,7 +54,7 @@
             	<button type="submit" class="btn btn-primary">Submit</button>
             	</form>
             </div>
-            <div style="float:right;width:900px;height:600px;margin-top:-570px;">
+            <div style="float:right;width:900px;height:600px;margin-top:-570px;margin-right:10px;">
             	<table class="table">
             		<thead>
             		<tr>

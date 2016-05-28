@@ -1,8 +1,18 @@
 from __future__ import unicode_literals
+import datetime
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
+
+class DownloadLimits(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    num_count = models.PositiveIntegerField(default=0)
+    date = models.DateField(_('Date'), default=datetime.date.today)
+    
+    def __str__(self):
+        return '{}-{}-{}'.format(self.user.email, self.num_count, self.date)
+
 class Skill(models.Model):
     name = models.CharField(_('Skill'), max_length=255)
     
