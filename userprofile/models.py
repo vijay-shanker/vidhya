@@ -23,6 +23,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         _('Gender'),max_length=10, null=True, 
         blank=True, choices=GENDER_CHOICES )
     
+    is_recruiter = models.BooleanField(
+        _('Is a Recruiter'), default=False)
+    
     is_staff = models.BooleanField(
         _('Staff status'), default=False,
         help_text=_('whether the user can log into this admin '

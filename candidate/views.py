@@ -1,14 +1,42 @@
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
 
 from .forms import SearchForm
 from .models import Candidate
+from core.utils import recruiter_check
+
+
+class LoginView(TemplateView):
+    template_name = 'signin.html'
+    
+    def post(self, request, *args, **kwargs):
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(email=email, password=password)
+        if not user:
+            raise PermissionDenied
+            
+        login(request, user)
+        
+        if user.is_superuser:
+            return redirect('/admin/')
+        else:
+            return redirect('/search/')
+            
 
 class SearchCandidates(TemplateView):
     template_name= 'search.html'
     form_class = SearchForm
+    
+    @method_decorator(recruiter_check)
+    def dispatch(self, request, *args, **kwargs):
+        return super(SearchCandidates, self).dispatch(request, *args, **kwargs)
     
     def get_context_data(self, *args, **kwargs):
         ctx = super(SearchCandidates, self).get_context_data(*args, **kwargs)
@@ -55,6 +83,10 @@ class SearchCandidates(TemplateView):
         return queryset
     
     def post(self, request, *args, **kwargs):
+        '''
+        post is called to get csv of filtered queryset
+        '''
+        
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment;filename="candidate_export.csv"'
         writer = csv.writer(response)

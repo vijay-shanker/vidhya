@@ -4,7 +4,7 @@ from core.models import City
 
 
 QCHOICES = (
-    ('UG','Undergaduate'),
+    ('UG','Graduate'),
     ('PG', 'Postgraduate'),
     ('POST_PG', 'Post PG')
     )

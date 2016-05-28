@@ -2,6 +2,21 @@ from django.db.models import Q
 from core.models import *
 from candidate.models import *
 
+from functools import wraps
+from django.core.exceptions import PermissionDenied
+
+def recruiter_check(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        if any([ request.user.is_anonymous(), request.user.is_recruiter == False ]):
+            if request.user.is_superuser:
+                return func(request, *args, **kwargs)
+            else:
+                raise PermissionDenied
+        else:
+            return func(request, *args, **kwargs)
+    return wrapper
+    
 
 class UploadData(object):
     '''

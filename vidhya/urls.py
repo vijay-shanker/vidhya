@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from candidate.views import SearchCandidates
+from candidate.views import SearchCandidates, LoginView
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^search/$', SearchCandidates.as_view(), name="search_view"),
+    url(r'^$', LoginView.as_view(), name="login_view"),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/'}),
 ]
