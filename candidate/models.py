@@ -20,9 +20,9 @@ class Qualification(models.Model):
     '''
     
     COURSE_CHOICES = (
-        ('PG_Course','PG_Course'),
-        ('UG_Course', 'UG_Course'),
-        ('Post_PG', 'Post_PG')
+        ('PG','PG_Course'),
+        ('UG', 'UG_Course'),
+        ('POST_PG', 'Post_PG')
         )
     
     course_type = models.CharField(_('Course Type'), max_length=10, choices=COURSE_CHOICES)

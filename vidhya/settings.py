@@ -72,6 +72,11 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
+)
+
 WSGI_APPLICATION = 'vidhya.wsgi.application'
 
 AUTH_USER_MODEL = 'userprofile.User'

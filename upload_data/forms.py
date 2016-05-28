@@ -21,6 +21,12 @@ class CandidateDataForm(forms.ModelForm):
                 if i.column:
                     mydict[column_map[str(i.column)]] = i.value
             data_list.append(mydict)
+            
+            #creating in chunks of 100
+            if len(data_list) >= 100:
+                upload_data = UploadData(data_list)
+                upload_data.create_candidates()
+                data_list =[]
         
         upload_data = UploadData(data_list)
         upload_data.create_candidates()

@@ -72,7 +72,7 @@ class UploadData(object):
     def get_city(self, city_name, corrected_name=None):
         '''
         utility function to get city, looks for __iexact match of city,
-        in case of no match, create the city and return 
+        in case of no match, creates the city and return 
         '''
         city_name = city_name.strip()
         
