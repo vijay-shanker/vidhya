@@ -8,6 +8,7 @@ class City(models.Model):
     corrected_name = models.CharField(max_length=40, null=True, blank=True)
     
     class Meta:
+        verbose_name_plural = 'Cities'
         ordering = ('name',)
         
     def __str__(self):

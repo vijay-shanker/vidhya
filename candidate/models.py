@@ -4,7 +4,7 @@ from django.db import models
 
 # Create your models here.
 class Skill(models.Model):
-    name = models.CharField(_('Skill'), max_length=30)
+    name = models.CharField(_('Skill'), max_length=255)
     
     class Meta:
         verbose_name_plural = 'Skills'
@@ -33,18 +33,19 @@ class Qualification(models.Model):
         _('Corrected Course Name'), max_length=100, 
         null=True, blank=True)
     
-    institute = models.CharField(_('Institute'), max_length=100)
+    institute = models.CharField(_('Institute'), max_length=100, null=True, blank=True)
     
     tier1 = models.BooleanField(_('Is Tier1'), default=False)
     
-    passing_year = models.CharField(_('Passing Year'), max_length=5)
+    passing_year = models.CharField(
+        _('Passing Year'), max_length=5, null=True, blank=True)
     
     class Meta:
         verbose_name_plural = 'Qualifications'
         ordering = ('course_name',)
         
     def __str__(self):
-        return '%s|%s'.format(self.course_type, self.course_name)
+        return '{}-{}'.format(self.course_type, self.course_name)
 
 
 class Candidate(models.Model):
@@ -62,22 +63,28 @@ class Candidate(models.Model):
     
     email = models.EmailField(_('Email'), max_length=254)
     
-    qualifications = models.ManyToManyField('candidate.Qualification', verbose_name=_('Qualifications'))
+    qualifications = models.ManyToManyField(
+        'candidate.Qualification', blank=True, 
+        verbose_name=_('Qualifications'))
     
-    skills = models.ManyToManyField('candidate.Skill', verbose_name=_('Candidates Skillset'))
+    skills = models.ManyToManyField(
+        'candidate.Skill', blank=True, 
+        verbose_name=_('Candidates Skillset'))
     
     work_exp = models.PositiveIntegerField(_('Work Experience'), default=0)
     
     analytics_exp = models.PositiveIntegerField(_('Analytics Experience'), default=0)
     
     current_city = models.ForeignKey(
-        'core.City', related_name="current_city", verbose_name=_('Current city'))
+        'core.City', null=True, blank=True, 
+        related_name="current_city", verbose_name=_('Current city'))
     
     nearest_city = models.ForeignKey(
-        'core.City', related_name="nearest_city", verbose_name=_('Nearest City'))
+        'core.City', null=True, blank=True, 
+        related_name="nearest_city", verbose_name=_('Nearest City'))
     
     preferred_city = models.ManyToManyField(
-        'core.City', related_name='preferred_city', verbose_name=_('Preferred cities'))
+        'core.City', blank=True, related_name='preferred_city', verbose_name=_('Preferred cities'))
     
     ctc = models.FloatField(_('Current CTC'), default=0)
     

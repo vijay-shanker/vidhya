@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core',
     'userprofile',
     'candidate',
+    'upload_data',
 ]
 
 MIDDLEWARE_CLASSES = [
